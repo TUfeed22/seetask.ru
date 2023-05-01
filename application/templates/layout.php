@@ -1,3 +1,7 @@
+<?php
+use application\Models\User\User;
+$currentUser = (new User())->currentUser(); ?>
+
 <!DOCTYPE html>
 <html lang="ru">
 <head>

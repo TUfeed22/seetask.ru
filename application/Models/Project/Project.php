@@ -1,6 +1,6 @@
 <?php
 
-namespace Models\Project;
+namespace application\Models\Project;
 
 /**
  * @property $id Идентификатор

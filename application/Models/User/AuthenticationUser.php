@@ -1,6 +1,6 @@
 <?php
 
-namespace Models\User;
+namespace application\Models\User;
 
 use Exception;
 

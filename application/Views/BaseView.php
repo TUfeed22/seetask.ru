@@ -1,9 +1,10 @@
 <?php
 
-namespace Views;
+namespace application\Views;
 
+use application\Configuration\Application;
 use Exception;
-use Models\User\User;
+use application\Models\User\User;
 
 class BaseView
 {
@@ -30,10 +31,12 @@ class BaseView
 	 * @param $template
 	 * @param array $data
 	 * @return false|string
+	 * @throws Exception
 	 */
 	public function renderContent($template, array $data=[]): bool|string
 	{
-		$templatePath = $_SERVER['DOCUMENT_ROOT'] . '/application/templates/' . $template;
+		$templatePath = Application::basePath() . '/application/templates/' . $template;
+		$this->generateCSRFToken();
 
 		ob_start();
 
@@ -54,11 +57,11 @@ class BaseView
 	 */
 	public function render(): void
 	{
-		$templatePath = $_SERVER['DOCUMENT_ROOT'] . '/application/templates/' . $this->templateLayout;
+		$templatePath = Application::basePath() . '/application/templates/' . $this->templateLayout;
 
 		$data['title'] = $this->title;
 		$data['content'] = $this->content;
-		$data['currentUser'] = (new User())->currentUser();
+		//$data['currentUser'] = (new User())->currentUser();
 
 		if (file_exists($templatePath)) {
 			extract($data);

@@ -1,9 +1,9 @@
 <?php
 
-namespace Controllers;
+namespace application\Controllers;
 
 use Exception;
-use Views\Project\ProjectView;
+use application\Views\Project\ProjectView;
 
 class TaskController extends BaseController
 {

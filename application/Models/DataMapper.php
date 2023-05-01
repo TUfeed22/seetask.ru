@@ -1,8 +1,8 @@
 <?php
 
-namespace Models;
+namespace application\Models;
 
-use Database\ConnectionDB;
+use application\Database\ConnectionDB;
 use PDO;
 use PDOException;
 use Exception;

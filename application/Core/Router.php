@@ -1,7 +1,9 @@
 <?php
 
 //require_once 'Controller.php';
-namespace Core;
+namespace application\Core;
+
+use application\Configuration\Application;
 
 class Router
 {
@@ -17,7 +19,7 @@ class Router
   public function controller()
   {
     if ($this->uri == '/') {
-      require $_SERVER['DOCUMENT_ROOT'] . '/application/templates/index.php';
+      require Application::basePath() . '/application/templates/index.php';
       return;
     }
     // парсим url, получаем из него параметры и передаем в класс контроллера
@@ -41,7 +43,7 @@ class Router
         return;
       }
     }
-    include $_SERVER['DOCUMENT_ROOT'] . '/application/templates/404.php';
+    include Application::basePath() . '/application/templates/404.php';
   }
 
   /**

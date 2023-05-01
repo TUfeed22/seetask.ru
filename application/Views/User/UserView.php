@@ -1,8 +1,8 @@
 <?php
 
-namespace Views\User;
+namespace application\Views\User;
 
-use Views\BaseView;
+use application\Views\BaseView;
 
 class UserView extends BaseView
 {

@@ -1,12 +1,12 @@
 <?php
-namespace Controllers;
+namespace application\Controllers;
 
-use Views\BaseView;
-use Controllers\Tool\Tool;
+use application\Views\BaseView;
+use application\Controllers\Tool\Tool;
 use Exception;
-use Models\User\DataMapperUser;
-use Models\User\User;
-use Views\User\UserView;
+use application\Models\User\DataMapperUser;
+use application\Models\User\User;
+use application\Views\User\UserView;
 
 
 class UserController extends BaseController

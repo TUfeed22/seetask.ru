@@ -1,5 +1,5 @@
 <?php
-namespace Database;
+namespace application\Database;
 use PDO;
 use PDOException;
 use Exception;
@@ -12,8 +12,8 @@ final class ConnectionDB
 
 	private const DB_USER = 'root';
 	private const DB_USER_PASSWORD = 'root';
-	private const DB_NAME = 'dashboard_db';
-	private const DB_HOST = 'dash_db';
+	private const DB_NAME = 'seetask_db';
+	private const DB_HOST = 'postgresql-db';
 
 	/**
 	 * @var ConnectionDB|null

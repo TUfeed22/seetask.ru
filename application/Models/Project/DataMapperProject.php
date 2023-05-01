@@ -1,8 +1,8 @@
 <?php
 
-namespace Models\Project;
+namespace application\Models\Project;
 
-use Models\DataMapper;
+use application\Models\DataMapper;
 
 class DataMapperProject extends DataMapper
 {

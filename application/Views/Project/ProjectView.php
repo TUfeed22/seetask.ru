@@ -1,8 +1,8 @@
 <?php
 
-namespace Views\Project;
+namespace application\Views\Project;
 
-use Views\BaseView;
+use application\Views\BaseView;
 
 class ProjectView extends BaseView
 {

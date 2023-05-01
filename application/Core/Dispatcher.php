@@ -1,7 +1,7 @@
 <?php
-namespace Core;
+namespace application\Core;
 
-use Controllers;
+use application\Controllers;
 class Dispatcher
 {
   private $controller;

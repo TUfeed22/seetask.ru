@@ -1,5 +1,5 @@
 <?php
-use Core\Route;
+use application\Core\Route;
 
 return [
   new Route('/admin/login-form/', 'admin', 'authorizationData'),

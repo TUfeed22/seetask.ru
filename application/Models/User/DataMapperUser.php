@@ -1,8 +1,8 @@
 <?php
 
-namespace Models\User;
+namespace application\Models\User;
 
-use Models\DataMapper;
+use application\Models\DataMapper;
 use Exception;
 
 class DataMapperUser extends DataMapper

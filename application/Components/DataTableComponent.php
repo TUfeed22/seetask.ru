@@ -1,6 +1,6 @@
 <?php
 
-namespace Components;
+namespace application\Components;
 
 class DataTableComponent
 {

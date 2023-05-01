@@ -1,10 +1,10 @@
 <?php
-namespace Controllers;
-use Views\BaseView;
-use Controllers\Tool\Tool;
+namespace application\Controllers;
+use application\Views\BaseView;
+use application\Controllers\Tool\Tool;
 use Exception;
-use Models\User\AuthenticationUser;
-use Views\User\UserView;
+use application\Models\User\AuthenticationUser;
+use application\Views\User\UserView;
 
 
 class AdminController extends BaseController

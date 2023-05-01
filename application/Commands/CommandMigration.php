@@ -1,8 +1,9 @@
 <?php
-namespace Commands;
+namespace application\Commands;
+
 use DateTime;
 use Exception;
-use Database\Migrations;
+use application\Database\Migrations;
 
 class CommandMigration
 {

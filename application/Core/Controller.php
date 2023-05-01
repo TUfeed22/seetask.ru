@@ -1,11 +1,11 @@
 <?php
-namespace Core;
+namespace application\Core;
 class Controller
 {
   private $name;
   private $action;
   private $params;
-	private $namespace = 'Controllers\\';
+	private $namespace = 'application\\Controllers\\';
 
   public function __construct($name, $action, $params = null)
   {
