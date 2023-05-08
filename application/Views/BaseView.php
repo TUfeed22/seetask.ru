@@ -4,13 +4,14 @@ namespace application\Views;
 
 use application\Configuration\Application;
 use Exception;
-use application\Models\User\User;
 
 class BaseView
 {
 	protected $title;
 	protected $content;
 	protected $templateLayout;
+	protected $scriptJS;
+	protected $styleCss;
 
 	/**
 	 * @throws Exception
@@ -51,6 +52,16 @@ class BaseView
 		return $this->content;
 	}
 
+	public function publishJS($path=[]): void
+	{
+		$this->scriptJS = $path;
+	}
+
+	public function publishCss($path=[]): void
+	{
+		$this->styleCss = $path;
+	}
+
 	/**
 	 * Рендеринг страницы
 	 * @throws Exception
@@ -61,7 +72,8 @@ class BaseView
 
 		$data['title'] = $this->title;
 		$data['content'] = $this->content;
-		//$data['currentUser'] = (new User())->currentUser();
+		$data['scripts'] = $this->scriptJS;
+		$data['styles'] = $this->styleCss;
 
 		if (file_exists($templatePath)) {
 			extract($data);

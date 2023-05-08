@@ -1,47 +1,29 @@
 <?php
 namespace application\Models\User;
+use application\Models\BaseModel;
+use application\Models\Project\DataMapperProject;
 use Exception;
 
 /**
  * Класс пользователя
  *
- * @property $id Id пользователя
- * @property $email Адрес электронной почты пользователя
- * @property $login Логин пользователя
- * @property $lastname Фамилия пользователя
- * @property $firstname Имя пользователя
- * @property $city Город пользователя
- * @property $password Пароль пользователя
+ * @property int $id Id пользователя
+ * @property string $email Адрес электронной почты пользователя
+ * @property string $login Логин пользователя
+ * @property string $lastname Фамилия пользователя
+ * @property string $firstname Имя пользователя
+ * @property string $city Город пользователя
+ * @property string $password Пароль пользователя
  */
-class User
+class User extends BaseModel
 {
-	/**
-	 * Магическим образом получаем имя неопределенного свойства, возвращаем соответствующий ему метод get
-	 * @param string $property
-	 * @return void
-	 */
-	public function __get(string $property)
+
+	public function __toString()
 	{
-		$method = "get{$property}";
-
-		if (method_exists($this, $method)) {
-			return $this->$method();
-		}
-	}
-
-	/**
-	 * Магическим образом получаем имя неопределенного свойства,
-	 * передаем значение $value и возвращаем соответствующий ему метод set
-	 * @param string $property
-	 * @param mixed $value
-	 * @return void
-	 */
-	public function __set(string $property, mixed $value)
-	{
-		$method = "set{$property}";
-
-		if (method_exists($this, $method)) {
-			$this->$method($value);
+		if ($this->lastname && $this->firstname) {
+			return $this->firstname . " " . $this->lastname;
+		} else {
+			return $this->login;
 		}
 	}
 
@@ -82,7 +64,7 @@ class User
 		return $this->password;
 	}
 
-	private function setPassword(string $password): void
+	protected function setPassword(string $password): void
 	{
 		$this->password = $password;
 	}
@@ -91,7 +73,7 @@ class User
 	 *
 	 * @param string $email
 	 */
-	private function setEmail(string $email): void
+	protected function setEmail(string $email): void
 	{
 		$this->email = $email;
 	}
@@ -99,7 +81,7 @@ class User
 	/**
 	 * @param string $login
 	 */
-	private function setLogin(string $login): void
+	protected function setLogin(string $login): void
 	{
 		$this->login = $login;
 	}
@@ -107,7 +89,7 @@ class User
 	/**
 	 * @param int $id
 	 */
-	private function setId(int $id): void
+	protected function setId(int $id): void
 	{
 		$this->id = $id;
 	}
@@ -139,7 +121,7 @@ class User
 	/**
 	 * @param mixed $city
 	 */
-	private function setCity(?string $city): void
+	protected function setCity(?string $city): void
 	{
 		$this->city = $city;
 	}
@@ -148,7 +130,7 @@ class User
 	 *
 	 * @param mixed $firstname
 	 */
-	private function setFirstname(?string $firstname): void
+	protected function setFirstname(?string $firstname): void
 	{
 		$this->firstname = $firstname;
 	}
@@ -157,7 +139,7 @@ class User
 	 *
 	 * @param mixed $lastname
 	 */
-	private function setLastname(?string $lastname): void
+	protected function setLastname(?string $lastname): void
 	{
 		$this->lastname = $lastname;
 	}
@@ -181,5 +163,14 @@ class User
 	public static function getTableName(): string
 	{
 		return 'users';
+	}
+
+	/**
+	 * @throws Exception
+	 */
+	public function getUsersAll()
+	{
+		$dataMapper = new DataMapperProject();
+		return $dataMapper->getRecordsAsObjects($this->getTableName());
 	}
 }

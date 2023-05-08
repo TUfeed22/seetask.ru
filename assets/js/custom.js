@@ -10,7 +10,7 @@ const formBasicInformation = document.getElementById('formBasicInformation');
  */
 let yearTag = document.querySelector('#currentYear');
 if (yearTag) {
-    yearTag.innerHTML = '<p>' + currentYear() + ' &copy; TDash</p>';
+    yearTag.innerHTML = '<p>' + currentYear() + ' &copy; SeeTask</p>';
 }
 
 /**

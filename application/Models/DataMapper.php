@@ -3,6 +3,7 @@
 namespace application\Models;
 
 use application\Database\ConnectionDB;
+use application\Models\Project\Project;
 use PDO;
 use PDOException;
 use Exception;
@@ -88,7 +89,7 @@ class DataMapper
 	 * @param array $params Массив с данными для запроса
 	 * @throws Exception
 	 */
-	protected function requestExecuteAndReturnRecord(string $query, array $params)
+	protected function requestExecuteAndReturnRecord(string $query, array $params, $fetchAll = false)
 	{
 		$connection = ConnectionDB::getInstance()->connection();
 
@@ -96,6 +97,9 @@ class DataMapper
 		$stmt->execute($params);
 
 		if (!empty($stmt)) {
+			if ($fetchAll) {
+				return $stmt->fetchAll(PDO::FETCH_ASSOC);
+			}
 			return $stmt->fetch(PDO::FETCH_ASSOC);
 		}
 		$stmt->closeCursor();
@@ -153,4 +157,29 @@ class DataMapper
 		return $result;
 	}
 
+	/**
+	 * Получаем наименование колонок таблицы
+	 * @throws Exception
+	 */
+	public function getColumns($table)
+	{
+		$query = "SELECT column_name FROM information_schema.columns WHERE table_name = :table";
+		return $this->requestExecuteAndReturnRecord($query, ['table' => $table], true);
+	}
+
+	/**
+	 * @throws Exception
+	 */
+	public function getRecordsAsObjects($model): array
+	{
+		$ids = $this->requestExecuteAndReturnRecord("SELECT id FROM " . $model::getTableName(), [], true);
+		$objects = [];
+
+		foreach ($ids as $id) {
+			$query = "SELECT * FROM " . $model::getTableName() . " WHERE id = :id";
+			$objects[] = $this->requestExecuteAndReturnFetchObject($model::class, $query, ['id' => $id['id']]);
+		}
+
+		return $objects;
+	}
 }

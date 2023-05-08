@@ -1,6 +1,7 @@
 <?php
 use application\Models\User\User;
-$currentUser = (new User())->currentUser(); ?>
+$currentUser = (new User())->currentUser();
+?>
 
 <!DOCTYPE html>
 <html lang="ru">
@@ -15,6 +16,14 @@ $currentUser = (new User())->currentUser(); ?>
 	<link rel="shortcut icon" href="/assets/images/logo/favicon.png" type="image/png"/>
 	<link rel="stylesheet" href="/assets/css/shared/iconly.css"/>
 	<link rel="stylesheet" href="/assets/extensions/toastify-js/src/toastify.css">
+	<?php
+  if ($styles) {
+	  foreach ($styles as $style) {
+		  echo "<link rel='stylesheet' href='$style'>";
+	  }
+  }
+
+	?>
 </head>
 
 <body>
@@ -29,7 +38,7 @@ $currentUser = (new User())->currentUser(); ?>
 							<i class="bi bi-justify fs-3"></i>
 						</a>
 						<div class="logo">
-							<a href="/admin/"><img src="/assets/images/logo/logo.svg" alt="Logo"/></a>
+              <a href="/admin/"><img src="/assets/images/logo/logo.svg" alt="Logo"/></a>
 						</div>
 
 						<ul class="navbar-nav ms-auto mb-lg-0">
@@ -156,5 +165,13 @@ $currentUser = (new User())->currentUser(); ?>
 <script src="/assets/js/app.js"></script>
 <script src="/assets/js/pages/horizontal-layout.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+<?php
+if ($scripts) {
+	foreach ($scripts as $script) {
+		echo "<script src='$script'></script>";
+	}
+}
+
+?>
 </body>
 </html>
