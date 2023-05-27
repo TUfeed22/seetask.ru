@@ -1,1 +1,0 @@
-ALTER TABLE users RENAME COLUMN last_name TO lastname;
