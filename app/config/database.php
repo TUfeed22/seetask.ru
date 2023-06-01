@@ -1,7 +1,9 @@
 <?php
 
 return (object) array(
-    'db_host' => 'test',
-    'db_user' => 'user',
-    'db_password' => 'password',
+    'db_host' => 'postgresql-db',
+    'db_port' => '5432',
+    'db_name' => 'seetask_db',
+    'db_user' => 'root',
+    'db_password' => 'root',
 );

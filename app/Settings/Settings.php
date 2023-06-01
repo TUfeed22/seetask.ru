@@ -11,7 +11,7 @@ class Settings
      */
     public static function getConfig(string $file): mixed
     {
-        $path = 'params/' . $file;
+        $path = $_SERVER['DOCUMENT_ROOT'] . '/app/config/' . $file;
         return require $path;
     }
 }
