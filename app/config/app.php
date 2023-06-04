@@ -1,5 +1,8 @@
 <?php
 
 return (object) array(
-    'basePath' => $_SERVER['DOCUMENT_ROOT']
+     // Директория по умолчанию
+    'basePath' => '/var/www/seetask.ru',
+    // Директория фалов конфигурации
+    'configPath' => '/var/www/seetask.ru/app/config/'
 );

@@ -3,6 +3,8 @@ namespace app\Settings;
 
 class Settings
 {
+    const PATH_FILE_CONFIGURATION = '/var/www/seetask.ru/app/config/';
+
     /**
      * Получить конфигурацию
      *
@@ -11,11 +13,38 @@ class Settings
      */
     public static function getConfig(string $file): mixed
     {
-        $path = '/var/www/seetask.ru/app/config/' . $file;
+        $path = self::PATH_FILE_CONFIGURATION . $file;
 
-        if (!file_exists($path)) {
+        if (self::fileConfigurationExists($path)) {
+            $config = require $path;
+            if (self::fileConfigurationEmpty($config) || gettype($config) != 'object') {
+                return null;
+            }
+            return $config;
+        } else {
             return null;
         }
-        return require $path;
+    }
+
+    /**
+     * Существует ли файл конфигурации
+     *
+     * @param $path
+     * @return bool
+     */
+    public static function fileConfigurationExists($path): bool
+    {
+        return file_exists($path);
+    }
+
+    /**
+     * Не пустой ли файл конфигурации
+     *
+     * @param $path
+     * @return bool
+     */
+    public static function fileConfigurationEmpty($path): bool
+    {
+        return empty($path);
     }
 }

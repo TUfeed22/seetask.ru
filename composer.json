@@ -1,6 +1,7 @@
 {
   "require": {
-    "monolog/monolog": "^3.3"
+    "monolog/monolog": "^3.3",
+    "ext-pdo": "*"
   },
   "autoload": {
     "classmap": [

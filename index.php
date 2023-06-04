@@ -8,4 +8,5 @@ spl_autoload_register(function ($className){
 });
 
 
-var_dump(Settings::getConfig('app.php'));
+var_dump(gettype(Settings::getConfig('app.php')));
+print_r(Settings::getConfig('app.php')->configPath);
