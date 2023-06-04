@@ -11,7 +11,11 @@ class Settings
      */
     public static function getConfig(string $file): mixed
     {
-        $path = $_SERVER['DOCUMENT_ROOT'] . '/app/config/' . $file;
+        $path = '/var/www/seetask.ru/app/config/' . $file;
+
+        if (!file_exists($path)) {
+            return null;
+        }
         return require $path;
     }
 }

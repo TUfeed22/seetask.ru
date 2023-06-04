@@ -7,8 +7,5 @@ spl_autoload_register(function ($className){
     include $_SERVER['DOCUMENT_ROOT'] . '/' . str_replace("\\", "/", $className) . '.php';
 });
 
-try {
-    $connection = Connection::db()->connection;
-} catch (PDOException $exception) {
-    throw new PDOException($exception->getMessage());
-}
+
+var_dump(Settings::getConfig('app.php'));
