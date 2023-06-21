@@ -17,13 +17,12 @@ class Settings
 
         if (self::fileConfigurationExists($path)) {
             $config = require $path;
-            if (self::fileConfigurationEmpty($config) || gettype($config) != 'object') {
+            if (gettype($config) != 'object') {
                 return null;
             }
             return $config;
-        } else {
-            return null;
         }
+        return null;
     }
 
     /**
@@ -37,14 +36,4 @@ class Settings
         return file_exists($path);
     }
 
-    /**
-     * Не пустой ли файл конфигурации
-     *
-     * @param $path
-     * @return bool
-     */
-    public static function fileConfigurationEmpty($path): bool
-    {
-        return empty($path);
-    }
 }

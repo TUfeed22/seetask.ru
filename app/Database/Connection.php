@@ -10,9 +10,9 @@ final class Connection
 
     private function __construct()
     {
-        $connectConfig = Settings::getConfig('database.php');
-        $dsn = "pgsql:host=$connectConfig->db_host;port=$connectConfig->db_port;
-                dbname=$connectConfig->db_name;user=$connectConfig->db_user;password=$connectConfig->db_password";
+        $dbConfig = Settings::getConfig('database.php');
+        $dsn = "pgsql:host=$dbConfig->db_host;port=$dbConfig->db_port;
+                dbname=$dbConfig->db_name;user=$dbConfig->db_user;password=$dbConfig->db_password";
         $this->connection = new PDO($dsn);
     }
     private function __clone(){}
