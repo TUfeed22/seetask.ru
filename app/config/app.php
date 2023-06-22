@@ -5,5 +5,8 @@ return (object) array(
     'basePath' => '/var/www/seetask.ru',
     // Директория фалов конфигурации
     'configPath' => '/var/www/seetask.ru/app/config/',
-    'migratePath' => '/var/www/seetask.ru/app/Database/migrations/'
+    // Директория файлов миграции
+    'migrationsPath' => '/var/www/seetask.ru/app/Database/migrations/',
+    // наименование таблицы миграций
+    'migrationsTableName' => 'migrations',
 );
