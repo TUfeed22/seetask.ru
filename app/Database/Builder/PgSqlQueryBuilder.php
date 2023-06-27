@@ -9,11 +9,16 @@ class PgSqlQueryBuilder extends Builder
 {
     protected $query;
 
-    private array $requests = [
+    private array $typesRequests = [
         'select',
         'update',
         'delete'
     ];
+
+    public static function createSql(): PgSqlQueryBuilder
+    {
+        return new self();
+    }
 
     /**
      * Создаем новый объект для каждого нового запроса (select, update, delete)
@@ -32,7 +37,7 @@ class PgSqlQueryBuilder extends Builder
     public function select($columns): PgSqlQueryBuilder
     {
         $this->reset();
-        $this->query->select = "SELECT " . implode(',' ,$columns);
+        $this->query->select = "SELECT " . implode(',', $columns);
         $this->query->type = 'select'; // тип запроса
         return $this;
     }
@@ -50,13 +55,15 @@ class PgSqlQueryBuilder extends Builder
 
     /**
      * Присоединение к таблицам
-     * @param $params
+     * @param $table
+     * @param $leftCondition
+     * @param $rightCondition
      * @param string $mode
      * @return PgSqlQueryBuilder
      */
-    public function join($params, string $mode = ''): PgSqlQueryBuilder
+    public function join($table, $leftCondition, $rightCondition, string $mode = 'INNER'): PgSqlQueryBuilder
     {
-        $this->query->join = " $mode JOIN ON $params ";
+        $this->query->join[] = "$mode JOIN $table ON $leftCondition = $rightCondition";
         return $this;
     }
 
@@ -70,7 +77,7 @@ class PgSqlQueryBuilder extends Builder
      */
     public function where($field, $value, $operator): PgSqlQueryBuilder
     {
-        if (!in_array($this->query->type, $this->requests)) {
+        if (!in_array($this->query->type, $this->typesRequests)) {
             throw new Exception('WHERE можно добавить только для SELECT, UPDATE и DELETE.');
         }
         $this->query->where[] = "$field $operator $value";
@@ -83,7 +90,7 @@ class PgSqlQueryBuilder extends Builder
      */
     public function build(): string
     {
-        $sql = '';
+        $sql = "";
         switch ($this->query->type) {
             case 'select':
                 $sql .= $this->query->select;
@@ -93,6 +100,10 @@ class PgSqlQueryBuilder extends Builder
                 $sql .= $this->query->update;
                 $sql .= $this->query->from;
                 break;
+        }
+
+        if (!empty($this->query->join)) {
+            $sql .= " " . implode(' ', $this->query->join);
         }
 
         if (!empty($this->query->where)) {
