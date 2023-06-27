@@ -2,18 +2,24 @@
 
 namespace app\Commands;
 
+use app\Database\Builder\PgSqlQueryBuilder;
 use app\Settings\Settings;
 use DateTime;
 use DateTimeZone;
+use Exception;
 
 class TestCommand
 {
+    /**
+     * @throws Exception
+     */
     public function actionHello(): void
     {
-        $data = new DateTime();
-        $data->setTimezone(new DateTimeZone('+0300'));
-
-        $hash = md5($data->format('y-m-d h:i:m') . rand(1,10), 5);
-        echo $hash . PHP_EOL;
+        $query = new PgSqlQueryBuilder();
+        echo $query->select(['*'])
+                ->from('users')
+                ->where('id', 4, '>')
+                ->where('id', 4, '<')
+                ->build() . PHP_EOL;
     }
 }

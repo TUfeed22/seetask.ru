@@ -30,17 +30,17 @@ class MigrateCommand extends Migration
      */
     public function actionUp(): void
     {
-        $migrationsTableName = Settings::getConfig('app.php')->migrationsTableName;
-        $migrationsPath = Settings::getConfig('app.php')->migrationsPath;
-
+        echo 'Проверяем существование таблицы ' . $this->getTableName() . PHP_EOL;
         // создаем таблицу, если она не создана
-        $this->createTableMigrations($migrationsTableName);
+        $this->createTableMigrations();
+
+        if (!Database::checkTable($this->getTableName())) {
+            echo 'Таблица не создана!' . PHP_EOL;
+        }
 
         // поиск новых миграций
-        $newMigrations = $this->searchNewMigrations($migrationsPath, $migrationsTableName);
-
         // применяем миграции, если они есть
-        $this->applyMigration($migrationsPath, $newMigrations);
+        $this->applyMigration($this->searchNewMigrations());
     }
 
     /**

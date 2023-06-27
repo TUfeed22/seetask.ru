@@ -2,7 +2,7 @@
 
 namespace app\Database;
 
-use app\Database\Builder\QueryBuilder;
+use app\Database\Builder\PgSqlQueryBuilder;
 use PDO;
 
 class Database
@@ -15,9 +15,11 @@ class Database
     public static function checkTable($tableName): bool
     {
         $pdo = Connection::db()->connection;
-        $query = "SELECT EXISTS (SELECT FROM information_schema.columns WHERE table_name = '$tableName')";
+        $query = "SELECT EXISTS(SELECT * FROM information_schema.tables where table_name = '$tableName')";
         $stmt = $pdo->prepare($query);
-        return $stmt->execute();
+        $stmt->execute();
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        return $result['exists'] == 1;
     }
 
     /**
@@ -33,10 +35,10 @@ class Database
         foreach ($columns as $column => $param) {
             $query .= "$column $param";
             if (array_key_last($columns) != $column) {
-                $query .= ',';
+                $query .= ",";
             }
         }
-        $query = ");";
+        $query .= ");";
 
         $pdo->prepare($query)->execute();
     }
@@ -49,11 +51,11 @@ class Database
     public static function fetchAll(string $tableName, string $columns = '*'): bool|array
     {
         $pdo = Connection::db()->connection;
-        $queryBuilder = new QueryBuilder();
+        $queryBuilder = new PgSqlQueryBuilder();
         $stmt = $pdo->prepare($queryBuilder
             ->select($columns)
             ->from($tableName)
-            ->builder()
+            ->build()
         );
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
