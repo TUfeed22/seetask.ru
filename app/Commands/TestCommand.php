@@ -16,19 +16,8 @@ class TestCommand
     public function actionHello(): void
     {
         echo PgSqlQueryBuilder::createSql()
-                ->select(['*'])
-                ->from('users')
-                ->join('users', 'users.id', 'users.id', 'LEFT')
-                ->join('test', 'test.id', 'users.id')
-                ->where('id', 4, '>')
-                ->where('id', 4, '<')
-                ->build() . PHP_EOL;
-
-        echo PgSqlQueryBuilder::createSql()
-                ->select(['id, name'])
-                ->from('users')
-                ->join('test', 'test.id', 'users.id')
-                ->where('id', 24, '>')
+                ->insert('users')
+                ->values(['username'], [['tufeed2345']])
                 ->build() . PHP_EOL;
     }
 }

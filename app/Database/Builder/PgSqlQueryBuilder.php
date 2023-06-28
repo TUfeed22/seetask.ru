@@ -43,6 +43,53 @@ class PgSqlQueryBuilder extends Builder
     }
 
     /**
+     * Вставка
+     * @param $table
+     * @return PgSqlQueryBuilder
+     */
+    public function insert($table): PgSqlQueryBuilder
+    {
+        $this->reset();
+        $this->query->insert = "INSERT INTO $table ";
+        $this->query->type = 'insert'; // тип запроса
+        return $this;
+    }
+
+    /**
+     * Вставка данных в таблицу, необходимо указать колонки и в двумерном массиве значения для вставки
+     * @param array $fields - массив колонок таблицы
+     * @param array $values - двумерный массив с значениями для вставки в БД
+     * @return PgSqlQueryBuilder
+     * @throws Exception
+     */
+    public function values(array $fields, array $values): PgSqlQueryBuilder
+    {
+        if ($this->query->type != 'insert') {
+            throw new Exception('Функцию values() можно использовать только для INSERT');
+        }
+        // оборачиваем элементы массива в кавычки
+        $values = $this->wrappingArrayElementsInQuotationMarks($values);
+
+        $parseValue = '';
+        // часть запроса формируется по-разному, в зависимости многомерный массив или нет,
+        // учитываются только двумерные массивы
+        if (!is_array($values[0])) {
+            $parseValue .= "(" . implode(',', $values) . ")";
+        } else {
+            foreach ($values as $value) {
+                $parseValue .= "(" . implode(',', $value) . ")";
+
+                // перечисление через запятую, если элемент в массиве не последний
+                if ($values[array_key_last($values)] != $value) {
+                    $parseValue .= ",";
+                }
+            }
+        }
+        $this->query->values = "(" . implode(',', $fields) . ") VALUES $parseValue";
+        return $this;
+    }
+
+    /**
      * Выбор таблицы
      * @param $table
      * @return PgSqlQueryBuilder
@@ -87,6 +134,7 @@ class PgSqlQueryBuilder extends Builder
     /**
      * Строитель запроса
      * @return string
+     * @throws Exception
      */
     public function build(): string
     {
@@ -94,11 +142,24 @@ class PgSqlQueryBuilder extends Builder
         switch ($this->query->type) {
             case 'select':
                 $sql .= $this->query->select;
+                if (empty($this->query->from)) {
+                    throw new Exception('Необходимо указать параметр FROM.');
+                }
                 $sql .= $this->query->from;
                 break;
             case 'update':
                 $sql .= $this->query->update;
+                if (empty($this->query->from)) {
+                    throw new Exception('Необходимо указать параметр FROM.');
+                }
                 $sql .= $this->query->from;
+                break;
+            case 'insert':
+                $sql .= $this->query->insert;
+                if (empty($this->query->values)) {
+                    throw new Exception('Необходимо указать значения для вставки');
+                }
+                $sql .= $this->query->values;
                 break;
         }
 
@@ -111,5 +172,19 @@ class PgSqlQueryBuilder extends Builder
         }
         $sql .= ";";
         return $sql;
+    }
+
+    /**
+     * Рекурсивная обертка элементов массива в кавычки
+     * @param array $values
+     * @return array
+     */
+    private function wrappingArrayElementsInQuotationMarks(array $values): array
+    {
+        $newValues = [];
+        foreach ($values as $value) {
+            $newValues[] = is_array($value) ? $this->wrappingArrayElementsInQuotationMarks($value) : "'" . $value . "'";
+        }
+        return $newValues;
     }
 }
