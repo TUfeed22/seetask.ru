@@ -3,6 +3,7 @@
 namespace app\Commands;
 
 use app\Database\Builder\PgSqlQueryBuilder;
+use app\Database\Database;
 use app\Settings\Settings;
 use DateTime;
 use DateTimeZone;
@@ -13,11 +14,11 @@ class TestCommand
     /**
      * @throws Exception
      */
-    public function actionHello(): void
+    public function actionTest(): void
     {
-        echo PgSqlQueryBuilder::createSql()
-                ->insert('users')
-                ->values(['username'], [['tufeed2345']])
-                ->build() . PHP_EOL;
+       $test = "create, table,";
+       $test = substr_replace($test, ');', -1, 1);
+       echo $test . PHP_EOL;
+
     }
 }

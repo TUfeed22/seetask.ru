@@ -27,6 +27,7 @@ class MigrateCommand extends Migration
     /**
      * Применение миграции
      * @return void
+     * @throws Exception
      */
     public function actionUp(): void
     {

@@ -2,6 +2,7 @@
 
 namespace app\Database;
 
+use app\Database\Builder\PgSqlQueryBuilder;
 use app\Settings\Settings;
 use DateTime;
 use Exception;
@@ -96,28 +97,39 @@ class Migration
     /**
      * Поиск новых миграций
      * @return array|bool
+     * @throws Exception
      */
     protected function searchNewMigrations(): array|bool
     {
-        echo 'Поиск новых миграций' . PHP_EOL;
+        $newMigrations = [];
+        echo 'Поиск новых миграций...' . PHP_EOL;
         $migrations = [];
         foreach (scandir($this->getTemplatePath()) as $migrationFile) {
             $migrations[] = basename($migrationFile, '.php');
         }
         if (!empty($migrations)) {
+            // удаляем первые два элемента: ['.', '..']
             array_splice($migrations, 0, 2);
-            echo 'Миграции найдены' . PHP_EOL;
-            print_r($migrations);
-            echo PHP_EOL;
+            $newMigrations = array_diff($migrations, Database::fetchAll($this->getTableName()));
+
+            if ($newMigrations) {
+                echo 'Миграции найдены:' . PHP_EOL;
+                foreach ($newMigrations as $migration) {
+                    echo '  ' . $migration . PHP_EOL;
+                }
+            } else {
+                echo 'Новых миграций нет.' . PHP_EOL;
+            }
         }
 
-        return array_diff(array_diff($migrations, Database::fetchAll($this->getTableName())));
+        return $newMigrations;
     }
 
     /**
      * Применяем миграции, если они есть
      * @param $newMigrations
      * @return void
+     * @throws Exception
      */
     protected function applyMigration($newMigrations): void
     {
@@ -126,8 +138,8 @@ class Migration
                 echo "Применение миграции: " . $migration . PHP_EOL;
                 $class = str_replace('/', '\\', 'app\\Database\\migrations\\' . $migration);
                 call_user_func(array(new $class, 'up'));
-                $this->saveMigrations($newMigrations);
             }
+            $this->saveMigrations($this->convertingOneDimensionalArrayToTwoDimensional($newMigrations));
         }
     }
 
@@ -135,15 +147,25 @@ class Migration
      * Сохранение миграции в БД
      * @param $migrations
      * @return void
+     * @throws Exception
      */
     private function saveMigrations($migrations): void
     {
         $pdo = Connection::db()->connection;
-        $query = 'INSERT INTO migrations (migration) VALUES ';
-        foreach ($migrations as $migration) {
-            $query .= "('$migration')";
-            $query .= array_key_last($migrations) != $migration ? ';' : ',';
-        }
+        $query = PgSqlQueryBuilder::createSql()
+            ->insert($this->getTableName())
+            ->values(['migration'], $migrations)
+            ->build();
         $pdo->prepare($query)->execute();
+    }
+
+    /**
+     * Преобразование одномерного массива в двумерный
+     * @param array $array
+     * @return array
+     */
+    private function convertingOneDimensionalArrayToTwoDimensional(array $array): array
+    {
+        return array_map(fn($value) => [$value], $array);
     }
 }

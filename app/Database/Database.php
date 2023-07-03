@@ -3,6 +3,7 @@
 namespace app\Database;
 
 use app\Database\Builder\PgSqlQueryBuilder;
+use Exception;
 use PDO;
 
 class Database
@@ -34,21 +35,18 @@ class Database
 
         foreach ($columns as $column => $param) {
             $query .= "$column $param";
-            if (array_key_last($columns) != $column) {
-                $query .= ",";
-            }
         }
-        $query .= ");";
-
+        $query = substr_replace($query, ');', -1, 1);
         $pdo->prepare($query)->execute();
     }
 
     /**
      * @param string $tableName
-     * @param string $columns
+     * @param array $columns
      * @return bool|array
+     * @throws Exception
      */
-    public static function fetchAll(string $tableName, string $columns = '*'): bool|array
+    public static function fetchAll(string $tableName, array $columns = ['*']): bool|array
     {
         $pdo = Connection::db()->connection;
         $queryBuilder = new PgSqlQueryBuilder();
@@ -58,6 +56,6 @@ class Database
             ->build()
         );
         $stmt->execute();
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return $stmt->fetchall(PDO::FETCH_COLUMN);
     }
 }

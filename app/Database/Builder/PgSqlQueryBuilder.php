@@ -31,10 +31,10 @@ class PgSqlQueryBuilder extends Builder
 
     /**
      * Построение select
-     * @param $columns
+     * @param array $columns
      * @return PgSqlQueryBuilder
      */
-    public function select($columns): PgSqlQueryBuilder
+    public function select(array $columns): PgSqlQueryBuilder
     {
         $this->reset();
         $this->query->select = "SELECT " . implode(',', $columns);
@@ -44,10 +44,10 @@ class PgSqlQueryBuilder extends Builder
 
     /**
      * Вставка
-     * @param $table
+     * @param string $table
      * @return PgSqlQueryBuilder
      */
-    public function insert($table): PgSqlQueryBuilder
+    public function insert(string $table): PgSqlQueryBuilder
     {
         $this->reset();
         $this->query->insert = "INSERT INTO $table ";
@@ -58,7 +58,11 @@ class PgSqlQueryBuilder extends Builder
     /**
      * Вставка данных в таблицу, необходимо указать колонки и в двумерном массиве значения для вставки
      * @param array $fields - массив колонок таблицы
-     * @param array $values - двумерный массив с значениями для вставки в БД
+     * @param array $values - массив с значениями для вставки в БД.
+     *
+     * Пример 1: [['item1', 'item2'], ['item3', 'item4']],
+     *
+     * Пример 2: ['item1', 'item2']
      * @return PgSqlQueryBuilder
      * @throws Exception
      */
@@ -69,21 +73,15 @@ class PgSqlQueryBuilder extends Builder
         }
         // оборачиваем элементы массива в кавычки
         $values = $this->wrappingArrayElementsInQuotationMarks($values);
-
         $parseValue = '';
-        // часть запроса формируется по-разному, в зависимости многомерный массив или нет,
-        // учитываются только двумерные массивы
+        // часть запроса формируется по-разному, в зависимости многомерный массив или нет
         if (!is_array($values[0])) {
             $parseValue .= "(" . implode(',', $values) . ")";
         } else {
             foreach ($values as $value) {
-                $parseValue .= "(" . implode(',', $value) . ")";
-
-                // перечисление через запятую, если элемент в массиве не последний
-                if ($values[array_key_last($values)] != $value) {
-                    $parseValue .= ",";
-                }
+                $parseValue .= "(" . implode(',', $value) . "),";
             }
+            $parseValue = rtrim($parseValue, ',');
         }
         $this->query->values = "(" . implode(',', $fields) . ") VALUES $parseValue";
         return $this;
@@ -91,10 +89,10 @@ class PgSqlQueryBuilder extends Builder
 
     /**
      * Выбор таблицы
-     * @param $table
+     * @param string $table
      * @return PgSqlQueryBuilder
      */
-    public function from($table): PgSqlQueryBuilder
+    public function from(string $table): PgSqlQueryBuilder
     {
         $this->query->from = " FROM $table";
         return $this;
@@ -102,13 +100,13 @@ class PgSqlQueryBuilder extends Builder
 
     /**
      * Присоединение к таблицам
-     * @param $table
-     * @param $leftCondition
-     * @param $rightCondition
+     * @param string $table
+     * @param string $leftCondition
+     * @param string $rightCondition
      * @param string $mode
      * @return PgSqlQueryBuilder
      */
-    public function join($table, $leftCondition, $rightCondition, string $mode = 'INNER'): PgSqlQueryBuilder
+    public function join(string $table, string $leftCondition, string $rightCondition, string $mode = 'INNER'): PgSqlQueryBuilder
     {
         $this->query->join[] = "$mode JOIN $table ON $leftCondition = $rightCondition";
         return $this;
