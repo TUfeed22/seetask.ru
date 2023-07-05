@@ -2,6 +2,8 @@
 
 namespace app\Commands;
 
+use app\Database\Builder\PgSqlQueryBuilder;
+use app\Database\Connection;
 use app\Database\Database;
 use app\Settings\Settings;
 use app\Database\Migration;
@@ -46,10 +48,20 @@ class MigrateCommand extends Migration
 
     /**
      * Откат миграции
+     * @param $migration
      * @return void
+     * @throws Exception
      */
-    public function actionDown(): void
+    public function actionDown($migration): void
     {
-
+        $pdo = Connection::db()->connection;
+        $query = PgSqlQueryBuilder::createSql()
+            ->select(['migration'])
+            ->from($this->getTableName())
+            ->where('migration', $migration, '=')
+            ->build();
+        $result = $pdo->prepare($query)->execute();
+        $class = str_replace('/', '\\', 'app\\Database\\migrations\\' . $migration);
+        call_user_func(array(new $class, 'down'));
     }
 }

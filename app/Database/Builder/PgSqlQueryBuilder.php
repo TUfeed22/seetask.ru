@@ -125,7 +125,7 @@ class PgSqlQueryBuilder extends Builder
         if (!in_array($this->query->type, $this->typesRequests)) {
             throw new Exception('WHERE можно добавить только для SELECT, UPDATE и DELETE.');
         }
-        $this->query->where[] = "$field $operator $value";
+        $this->query->where[] = "$field $operator '$value'";
         return $this;
     }
 
