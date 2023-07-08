@@ -36,8 +36,6 @@ RUN apt-get update \
   && pecl install mongodb \
   && echo "extension=mongodb.so" > /usr/local/etc/php/conf.d/mongodb-ext.ini
 
-RUN yes '' | pecl install xdebug-3.2.1 && docker-php-ext-enable xdebug
-
 RUN docker-php-ext-configure intl --enable-intl && \
     docker-php-ext-configure gd --with-freetype --with-jpeg && \
     docker-php-ext-install -j$(nproc) gd && \
