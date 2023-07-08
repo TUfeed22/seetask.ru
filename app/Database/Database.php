@@ -58,4 +58,9 @@ class Database
         $stmt->execute();
         return $stmt->fetchall(PDO::FETCH_COLUMN);
     }
+
+    public static function deleteTable($table)
+    {
+
+    }
 }

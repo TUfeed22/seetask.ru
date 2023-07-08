@@ -56,6 +56,25 @@ class PgSqlQueryBuilder extends Builder
     }
 
     /**
+     * @param string $table
+     * @param string $usingTable
+     * @return $this
+     */
+    public function delete(string $table, $usingTable = null)
+    {
+        $this->reset();
+
+        if (!empty($usingTable)) {
+            $this->query->delete = "DELETE $table USING $usingTable";
+        } else {
+            $this->query->delete = "DELETE $table";
+        }
+
+        $this->query->type = 'delete'; // тип запроса
+        return $this;
+    }
+
+    /**
      * Вставка данных в таблицу, необходимо указать колонки и в двумерном массиве значения для вставки
      * @param array $fields - массив колонок таблицы
      * @param array $values - массив с значениями для вставки в БД.
@@ -155,9 +174,16 @@ class PgSqlQueryBuilder extends Builder
             case 'insert':
                 $sql .= $this->query->insert;
                 if (empty($this->query->values)) {
-                    throw new Exception('Необходимо указать значения для вставки');
+                    throw new Exception('Необходимо указать значения для вставки.');
                 }
                 $sql .= $this->query->values;
+                break;
+            case 'delete':
+                $sql .= $this->query->delete;
+                if (empty($this->query->from)) {
+                    throw new Exception('Необходимо указать параметр FROM.');
+                }
+                $sql .= $this->query->from;
                 break;
         }
 
