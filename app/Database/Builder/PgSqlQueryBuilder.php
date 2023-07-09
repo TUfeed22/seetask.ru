@@ -15,9 +15,14 @@ class PgSqlQueryBuilder extends Builder
         'delete'
     ];
 
-    public static function createSql(): PgSqlQueryBuilder
+    /**
+     *
+     * @param $query - строка sql запроса
+     * @return mixed|self
+     */
+    public static function createSql($query = null): mixed
     {
-        return new self();
+        return $query ?: new self();
     }
 
     /**

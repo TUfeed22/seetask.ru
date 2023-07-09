@@ -16,6 +16,9 @@ class TestCommand
      */
     public function actionTest(): void
     {
-       echo substr_replace('test,', ');', -1, 1) . PHP_EOL;
+       echo PgSqlQueryBuilder::createSql()
+           ->select(['id'])
+           ->from('test')
+           ->build() . PHP_EOL;
     }
 }

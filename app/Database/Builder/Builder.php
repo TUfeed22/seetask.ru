@@ -12,6 +12,6 @@ abstract class Builder
     abstract public function from(string $table);
     abstract public function join(string $table, string $leftCondition, string $rightCondition, string $mode = '');
     abstract public function where($field, $value, $operator);
-    abstract public static function createSql();
+    abstract public static function createSql($query = null);
     abstract public function build();
 }

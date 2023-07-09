@@ -51,12 +51,11 @@ class Database
     public static function fetchAll(string $tableName, array $columns = ['*']): bool|array
     {
         $pdo = Connection::db()->connection;
-        $queryBuilder = new PgSqlQueryBuilder();
-        $stmt = $pdo->prepare($queryBuilder
+        $query = PgSqlQueryBuilder::createSql()
             ->select($columns)
             ->from($tableName)
-            ->build()
-        );
+            ->build();
+        $stmt = $pdo->prepare($query);
         $stmt->execute();
         return $stmt->fetchall(PDO::FETCH_COLUMN);
     }
@@ -67,7 +66,7 @@ class Database
      * @return void
      * @throws Exception
      */
-    public static function deleteTable($table)
+    public static function deleteTable($table): void
     {
         $pdo = Connection::db()->connection;
         $pdo->prepare("DROP TABLE $table")->execute();
