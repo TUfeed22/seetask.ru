@@ -6,7 +6,8 @@ abstract class Builder
 {
     abstract public function select(array $columns);
     abstract public function insert(string $table);
-    abstract public function delete(string $table, $usingTable = null);
+    abstract public function delete();
+    abstract public function using(string $table);
     abstract public function values(array $fields, array $values);
     abstract public function from(string $table);
     abstract public function join(string $table, string $leftCondition, string $rightCondition, string $mode = '');

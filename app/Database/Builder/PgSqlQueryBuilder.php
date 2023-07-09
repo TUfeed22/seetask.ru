@@ -56,21 +56,28 @@ class PgSqlQueryBuilder extends Builder
     }
 
     /**
-     * @param string $table
-     * @param string $usingTable
      * @return $this
      */
-    public function delete(string $table, $usingTable = null)
+    public function delete()
     {
         $this->reset();
-
-        if (!empty($usingTable)) {
-            $this->query->delete = "DELETE $table USING $usingTable";
-        } else {
-            $this->query->delete = "DELETE $table";
-        }
-
+        $this->query->delete = "DELETE";
         $this->query->type = 'delete'; // тип запроса
+        return $this;
+    }
+
+    /**
+     * PostgreSQL позволяет ссылаться на столбцы других таблиц в условии WHERE,
+     * указывая другие таблицы в предложении USING.
+     *
+     * @throws Exception
+     */
+    public function using(string $table)
+    {
+        if ($this->query->type != 'delete') {
+            throw new Exception('USING можно использовать только для DELETE');
+        }
+        $this->query->using = " USING $table";
         return $this;
     }
 

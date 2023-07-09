@@ -48,20 +48,29 @@ class MigrateCommand extends Migration
 
     /**
      * Откат миграции
-     * @param $migration
+     * @param $name
      * @return void
      * @throws Exception
      */
-    public function actionDown($migration): void
+    public function actionDown($name): void
     {
         $pdo = Connection::db()->connection;
         $query = PgSqlQueryBuilder::createSql()
             ->select(['migration'])
             ->from($this->getTableName())
-            ->where('migration', $migration, '=')
+            ->where('migration', $name, '=')
             ->build();
-        $result = $pdo->prepare($query)->execute();
-        $class = str_replace('/', '\\', 'app\\Database\\migrations\\' . $migration);
+        $pdo->prepare($query)->execute();
+
+        $class = str_replace('/', '\\', 'app\\Database\\migrations\\' . $name);
+
         call_user_func(array(new $class, 'down'));
+        // удаляем запись из примененных миграций
+        $query = PgSqlQueryBuilder::createSql()
+            ->delete()
+            ->from('migrations')
+            ->where('migration', $name, '=')
+            ->build();
+        $pdo->prepare($query)->execute();
     }
 }

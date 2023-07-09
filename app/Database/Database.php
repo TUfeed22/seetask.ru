@@ -36,11 +36,12 @@ class Database
         foreach ($columns as $column => $param) {
             $query .= "$column $param";
         }
-        $query = substr_replace($query, ');', -1, 1);
+        $query .= ');';
         $pdo->prepare($query)->execute();
     }
 
     /**
+     * Запросить все записи
      * @param string $tableName
      * @param array $columns
      * @return bool|array
@@ -59,8 +60,15 @@ class Database
         return $stmt->fetchall(PDO::FETCH_COLUMN);
     }
 
+    /**
+     * Удаление таблицы
+     * @param $table
+     * @return void
+     * @throws Exception
+     */
     public static function deleteTable($table)
     {
-
+        $pdo = Connection::db()->connection;
+        $pdo->prepare("DROP TABLE $table")->execute();
     }
 }
