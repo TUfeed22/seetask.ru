@@ -34,9 +34,10 @@ class Database
         $query = "CREATE TABLE $tableName (";
 
         foreach ($columns as $column => $param) {
-            $query .= "$column $param";
+            $query .= "$column $param,";
         }
-        $query .= ');';
+
+        $query = substr_replace($query, ');', -1, 1);
         $pdo->prepare($query)->execute();
     }
 
