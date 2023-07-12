@@ -16,13 +16,11 @@ class PgSqlQueryBuilder extends Builder
     ];
 
     /**
-     *
-     * @param $query - строка sql запроса
-     * @return mixed|self
+     * @return PgSqlQueryBuilder
      */
-    public static function createSql($query = null): mixed
+    public static function createSql(): PgSqlQueryBuilder
     {
-        return $query ?: new self();
+        return new self();
     }
 
     /**
