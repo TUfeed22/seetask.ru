@@ -15,8 +15,7 @@ abstract class ControllerFactory
      */
     public static function create(Router $router): mixed
     {
-        $class = 'app\\Controllers\\' . ucfirst($router->controller) . 'Controller';
-        return self::getClassOr404($class);
+        return self::getClassOr404($router);
     }
 
     private static function checkClass($class): bool
@@ -28,11 +27,12 @@ abstract class ControllerFactory
 
     /**
      * Проверка существования контроллера, если его нет то возвращаем 404
-     * @param $class
+     * @param Router $router
      * @return Error404Controller|mixed
      */
-    private static function getClassOr404($class): mixed
+    private static function getClassOr404(Router $router): mixed
     {
+        $class = 'app\\Controllers\\' . ucfirst($router->controller) . 'Controller';
         if (self::checkClass($class)) {
             return new $class();
         }
